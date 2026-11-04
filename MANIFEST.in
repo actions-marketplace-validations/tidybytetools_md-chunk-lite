@@ -1,0 +1,4 @@
+include CHANGELOG.md
+include llms.txt
+include server.json
+recursive-include tests *.py *.md

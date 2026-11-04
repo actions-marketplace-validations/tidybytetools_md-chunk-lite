@@ -1,0 +1,31 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.tidybytetools/md-chunk-lite",
+  "title": "md-chunk-lite",
+  "description": "Split Markdown into chunks by heading. Each chunk keeps its heading path and line numbers.",
+  "repository": {
+    "url": "https://github.com/tidybytetools/md-chunk-lite",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/tidybytetools/md-chunk-lite",
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "md-chunk-lite",
+      "version": "1.0.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp",
+          "description": "Starts the MCP server instead of the command-line tool."
+        }
+      ]
+    }
+  ]
+}

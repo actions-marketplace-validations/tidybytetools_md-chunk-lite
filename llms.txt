@@ -1,0 +1,21 @@
+# md-chunk-lite
+
+> Free, MIT-licensed tool that splits Markdown into chunks by heading for RAG, embeddings and search. Every chunk keeps its heading path, GitHub-style anchor, and 1-based start and end line numbers. Deterministic (no AI, no tokenizer). Runs offline. Has a CLI, a Python API and a stdio MCP server.
+
+- Install: `pip install md-chunk-lite` (or from GitHub: `pip install git+https://github.com/tidybytetools/md-chunk-lite`)
+- CLI: `md-chunk-lite FILE... [-o out.jsonl | -o -] [--max-chars 1500] [--overlap-chars 0] [--prefix-path] [--outline] [--json]`. Default output is FILE.chunks.jsonl. `-` reads stdin. Exit 0 ok, 1 error.
+- Chunk fields: id, source, index, heading_path (list), heading_level (0 = text before the first heading), anchor, start_line, end_line, part, parts, chars, text.
+- Python: `from md_chunk_lite import chunk_markdown, chunk_file, outline, get_section`.
+- MCP: `uvx md-chunk-lite mcp` (or `uvx --from md-chunk-lite md-chunk-lite-mcp`). Tools: `chunk_markdown(path|text, max_chars, overlap_chars, prefix_path, start, limit)`, `outline_markdown(path|text)`, `get_section(path|text, heading|anchor, include_subsections)` (all read-only), and `save_chunks_jsonl(path, output_path, ...)` (writes one .jsonl file).
+
+## Use when
+- You need Markdown docs, notes or READMEs split into chunks that never mix two sections, with line numbers for citing sources.
+- You want just one section of a long Markdown file (get_section) or a map of its headings (outline_markdown).
+
+## Don't use when
+- The input is PDF, Word or HTML. The paid doc2md turns PDF, Word and HTML into chunks (page numbers for PDFs) and walks folders: https://tidybyte.gumroad.com/l/frlkv
+- You need sizes measured in tokens. Sizes here are characters.
+
+## Links
+- [README](https://github.com/tidybytetools/md-chunk-lite/blob/main/README.md)
+- [Paid doc2md](https://tidybyte.gumroad.com/l/frlkv)
