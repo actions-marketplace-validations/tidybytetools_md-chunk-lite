@@ -13,6 +13,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![MCP server](https://img.shields.io/badge/MCP-stdio-purple.svg)](#use-it-from-claude-desktop-or-cursor-mcp)
 [![Tests](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/tests.yml/badge.svg)](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/tests.yml)
+[![Action test](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/action-test.yml/badge.svg)](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/action-test.yml)
 
 Free tool that splits Markdown into chunks by heading. Every chunk knows its heading path and the line numbers it came from.
 Need PDF, Word or web page files turned into chunks (with page numbers for PDFs), or whole folders? The paid doc2md does that: **[doc2md on Gumroad](https://tidybyte.gumroad.com/l/frlkv)**
@@ -169,6 +170,58 @@ Tools (each one takes a file `path` or Markdown `text`):
 | `save_chunks_jsonl` | Saves the chunks to a `.jsonl` file. | Writes one `.jsonl` file (replaces it if it is there) |
 
 None of them use the internet.
+
+## Use it in GitHub Actions
+
+Chunk your docs on every push, so your AI search or docs bot always gets fresh chunks. It also warns you when a section is too big for one chunk, right on the line in the pull request.
+
+```yaml
+name: Docs chunks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  chunks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: tidybytetools/md-chunk-lite@v1
+        with:
+          files: docs/**/*.md
+          max-chars: "1500"
+          artifact-name: docs-chunks   # download the JSONL from the run page
+```
+
+Want a big section to fail the check instead of just warn? Add `fail-on-split: "true"`.
+
+It runs the code in the same tag you pick, with only Python's standard library. No API key, no account, and nothing is sent outside GitHub. It works on Linux, Windows and Mac runners.
+
+### Inputs
+
+| Input | Default | What it does |
+|---|---|---|
+| `files` | `**/*.md` | Which files to read. Glob patterns, one per line or split by commas. |
+| `exclude` | `node_modules/**`, `**/node_modules/**`, `vendor/**` | Patterns to skip. |
+| `max-chars` | `1500` | Biggest chunk, in characters (200 or more). |
+| `overlap-chars` | `0` | Characters from the part before to repeat at the start of the next part. |
+| `prefix-path` | `false` | Start each chunk's text with its heading path. |
+| `output` | `md-chunks.jsonl` | Where to save the chunks. |
+| `fail-on-split` | `false` | Fail when a section is too big for one chunk. |
+| `fail-if-no-files` | `true` | Fail when no files match. |
+| `artifact-name` | (empty) | If set, upload the JSONL as an artifact with this name. |
+| `python-version` | (empty) | Python to set up. Empty uses the runner's Python (3.10 or newer). |
+
+### Outputs
+
+| Output | What it is |
+|---|---|
+| `files` | How many files were read. |
+| `chunks` | How many chunks were made. |
+| `biggest` | Size of the biggest chunk, in characters. |
+| `split-sections` | How many sections were too big and got split. |
+| `output` | Path of the JSONL file. |
+
+The run page also gets a short report: chunks per file, and a list of every section that got split, with its line number.
 
 ## For AI agents
 

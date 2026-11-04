@@ -1,0 +1,119 @@
+name: "MD Chunk Lite"
+description: "Split your Markdown docs into heading-based chunks (JSONL) for AI search, and flag sections too big for one chunk."
+author: "Tidy Byte Tools"
+branding:
+  icon: "scissors"
+  color: "purple"
+
+inputs:
+  files:
+    description: "Which Markdown files to read. Glob patterns, one per line or split by commas. ** goes into sub-folders."
+    required: false
+    default: "**/*.md"
+  exclude:
+    description: "Glob patterns to skip, one per line or split by commas."
+    required: false
+    default: |
+      node_modules/**
+      **/node_modules/**
+      vendor/**
+  max-chars:
+    description: "Biggest chunk size, in characters (200 or more). About 4 characters make 1 token in English."
+    required: false
+    default: "1500"
+  overlap-chars:
+    description: "When a big section is split, start each part with up to this many characters from the part before it."
+    required: false
+    default: "0"
+  prefix-path:
+    description: "Set to true to start each chunk's text with its heading path, like 'Guide > Install'."
+    required: false
+    default: "false"
+  output:
+    description: "Where to save the chunks. One JSON object per line."
+    required: false
+    default: "md-chunks.jsonl"
+  fail-on-split:
+    description: "Set to true to fail the step when a section is too big for one chunk. By default it only warns."
+    required: false
+    default: "false"
+  fail-if-no-files:
+    description: "Fail the step when no files match. Set to false to just warn."
+    required: false
+    default: "true"
+  artifact-name:
+    description: "If set, upload the JSONL file as a workflow artifact with this name."
+    required: false
+    default: ""
+  python-version:
+    description: "Python version to set up. Leave empty to use the runner's own Python (3.10 or newer)."
+    required: false
+    default: ""
+
+outputs:
+  files:
+    description: "How many Markdown files were read."
+    value: ${{ steps.chunk.outputs.files }}
+  chunks:
+    description: "How many chunks were made."
+    value: ${{ steps.chunk.outputs.chunks }}
+  biggest:
+    description: "Size of the biggest chunk, in characters."
+    value: ${{ steps.chunk.outputs.biggest }}
+  split-sections:
+    description: "How many sections were too big for one chunk and got split."
+    value: ${{ steps.chunk.outputs.split-sections }}
+  output:
+    description: "Path of the JSONL file."
+    value: ${{ steps.chunk.outputs.output }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      id: setup
+      if: inputs.python-version != ''
+      uses: actions/setup-python@v7
+      with:
+        python-version: ${{ inputs.python-version }}
+        update-environment: false
+
+    - name: Find Python
+      id: py
+      shell: bash
+      env:
+        SETUP_PY: ${{ steps.setup.outputs.python-path }}
+      run: |
+        for c in "$SETUP_PY" python3 python; do
+          if [ -n "$c" ] && command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(sys.version_info < (3, 10))' 2>/dev/null; then
+            echo "python=$c" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+        done
+        echo "::error::MD Chunk Lite needs Python 3.10 or newer. Set the python-version input, like python-version: '3.12'."
+        exit 1
+
+    - name: Chunk Markdown
+      id: chunk
+      shell: bash
+      env:
+        PYTHON: ${{ steps.py.outputs.python }}
+        INPUT_FILES: ${{ inputs.files }}
+        INPUT_EXCLUDE: ${{ inputs.exclude }}
+        INPUT_MAX_CHARS: ${{ inputs.max-chars }}
+        INPUT_OVERLAP_CHARS: ${{ inputs.overlap-chars }}
+        INPUT_PREFIX_PATH: ${{ inputs.prefix-path }}
+        INPUT_OUTPUT: ${{ inputs.output }}
+        INPUT_FAIL_ON_SPLIT: ${{ inputs.fail-on-split }}
+        INPUT_FAIL_IF_NO_FILES: ${{ inputs.fail-if-no-files }}
+        PYTHONUTF8: "1"
+        PYTHONDONTWRITEBYTECODE: "1"
+      run: '"$PYTHON" "$GITHUB_ACTION_PATH/action/run.py"'
+
+    - name: Upload chunks
+      if: inputs.artifact-name != '' && steps.chunk.outputs.output != '' && !cancelled()
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ steps.chunk.outputs.output }}
+        if-no-files-found: error

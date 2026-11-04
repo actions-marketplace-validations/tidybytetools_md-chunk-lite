@@ -2,6 +2,13 @@
 
 What changed in md-chunk-lite, newest first.
 
+## 1.1.0 - 2026-11-04
+
+- New: a GitHub Action (`action.yml`). Add `uses: tidybytetools/md-chunk-lite@v1` to a workflow to chunk your Markdown docs on every push.
+- The action saves all chunks to one JSONL file, can upload it as an artifact, and writes a report to the run page.
+- It warns on the exact line when a section is too big for one chunk. Set `fail-on-split: "true"` to fail instead.
+- The command-line tool and MCP server did not change.
+
 ## 1.0.0 - 2026-11-04
 
 - First release.

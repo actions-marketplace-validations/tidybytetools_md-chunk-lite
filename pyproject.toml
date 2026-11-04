@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "md-chunk-lite"
-version = "1.0.0"
+version = "1.1.0"
 description = "Split Markdown into chunks by heading. Each chunk keeps its heading path and line numbers. CLI and MCP server. Runs locally."
 readme = "README.md"
 license = "MIT"

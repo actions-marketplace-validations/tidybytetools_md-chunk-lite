@@ -1,0 +1,123 @@
+name: Action test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  small-docs-pass:
+    name: Small docs pass (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - id: mcl
+        uses: ./
+        with:
+          files: .github/action-test/docs/**/*.md
+          output: out/chunks.jsonl
+          artifact-name: chunks-${{ matrix.os }}
+      - name: Check the outputs
+        shell: bash
+        run: |
+          test "${{ steps.mcl.outputs.files }}" = "2"
+          test "${{ steps.mcl.outputs.chunks }}" = "4"
+          test "${{ steps.mcl.outputs.split-sections }}" = "0"
+          test "${{ steps.mcl.outputs.output }}" = "out/chunks.jsonl"
+          test "$(wc -l < out/chunks.jsonl | tr -d ' ')" = "4"
+          grep -q '"heading_path": \["Small guide", "Install"\]' out/chunks.jsonl
+
+  big-section-warns:
+    name: A big section warns but passes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - id: mcl
+        uses: ./
+        with:
+          files: .github/action-test/big.md
+          max-chars: "500"
+      - name: Check the outputs
+        run: |
+          test "${{ steps.mcl.outcome }}" = "success"
+          test "${{ steps.mcl.outputs.split-sections }}" = "1"
+          test -f md-chunks.jsonl
+
+  big-section-fails:
+    name: fail-on-split true fails the step
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - id: mcl
+        uses: ./
+        continue-on-error: true
+        with:
+          files: .github/action-test/big.md
+          max-chars: "500"
+          fail-on-split: "true"
+      - name: Check that the step failed
+        run: |
+          test "${{ steps.mcl.outcome }}" = "failure"
+          test "${{ steps.mcl.outputs.split-sections }}" = "1"
+
+  no-files-fails:
+    name: No matching files fails the step
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - id: mcl
+        uses: ./
+        continue-on-error: true
+        with:
+          files: does-not-exist/**/*.md
+      - name: Check that the step failed
+        run: test "${{ steps.mcl.outcome }}" = "failure"
+
+  no-files-allowed:
+    name: fail-if-no-files false lets the step pass
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - id: mcl
+        uses: ./
+        with:
+          files: does-not-exist/**/*.md
+          fail-if-no-files: "false"
+      - name: Check the outputs
+        run: test "${{ steps.mcl.outputs.files }}" = "0"
+
+  bad-input-fails:
+    name: A bad setting fails the step
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - id: mcl
+        uses: ./
+        continue-on-error: true
+        with:
+          files: .github/action-test/docs/*.md
+          max-chars: "10"
+      - name: Check that the step failed
+        run: test "${{ steps.mcl.outcome }}" = "failure"
+
+  set-python-version:
+    name: Works with python-version set
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - id: mcl
+        uses: ./
+        with:
+          files: .github/action-test/docs/small.md
+          python-version: "3.10"
+          prefix-path: "true"
+      - name: Check the outputs
+        run: |
+          test "${{ steps.mcl.outputs.chunks }}" = "3"
+          grep -q 'Small guide > Install' md-chunks.jsonl

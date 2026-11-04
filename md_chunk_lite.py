@@ -8,7 +8,7 @@ This file uses only the Python standard library. The MCP server
 """
 import argparse, json, os, re, sys, unicodedata
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 PRO_URL = "https://tidybyte.gumroad.com/l/frlkv"
 PRO_LINE = f"Tip: need PDF, Word or HTML files turned into chunks, or whole folders? doc2md (paid): {PRO_URL}"
 
