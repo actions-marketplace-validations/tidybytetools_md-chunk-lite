@@ -12,6 +12,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/tidybytetools/md-chunk-lite/blob/main/LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![MCP server](https://img.shields.io/badge/MCP-stdio-purple.svg)](#use-it-from-claude-desktop-or-cursor-mcp)
+[![MCP Registry](https://img.shields.io/badge/MCP_Registry-listed-green.svg)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.tidybytetools/md-chunk-lite)
+[![PyPI downloads](https://img.shields.io/pypi/dm/md-chunk-lite.svg)](https://pypistats.org/packages/md-chunk-lite)
 [![Tests](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/tests.yml/badge.svg)](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/tests.yml)
 [![Action test](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/action-test.yml/badge.svg)](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/action-test.yml)
 
@@ -19,6 +21,12 @@ Free tool that splits Markdown into chunks by heading. Every chunk knows its hea
 Need PDF, Word or web page files turned into chunks (with page numbers for PDFs), or whole folders? The paid doc2md does that: **[doc2md on Gumroad](https://tidybyte.gumroad.com/l/frlkv)**
 
 Good for AI search (RAG), embeddings, and docs bots. Plain code, not AI, so the same file always gives the same chunks. Runs on your own computer. MIT license. Python 3.10 or newer, on Windows, Mac and Linux.
+
+## Links
+
+- **[Website](https://tidybytetools.github.io/tools/markdown-chunker/)** — product page with prices and options
+- **[Apify (no-install cloud version)](https://apify.com/tidybytetools/markdown-rag-chunker)** — pay only for what you use
+- **[Pro version on Gumroad](https://tidybyte.gumroad.com/l/frlkv)** — PDF/Word/HTML to chunks (doc2md Pro)
 
 <!-- mcp-name: io.github.tidybytetools/md-chunk-lite -->
 
@@ -254,6 +262,19 @@ python3 -m unittest discover -s tests
 
 The MCP tests are skipped if `mcp` is not installed.
 
+## FAQ
+
+**What does it do?**
+It splits Markdown by heading into chunks, each with a heading path and line numbers. Good for RAG and embeddings.
+
+**Do my files leave my computer?**
+No. The tool runs on your computer.
+
+**Can it read PDFs?**
+Not this tool. Convert first with doc2md-lite, or use the paid doc2md which chunks PDFs and Word files.
+
+**Does it work with AI apps?**
+Yes. It includes a free MCP server. No API key.
 ## License
 
 MIT. See `LICENSE`.

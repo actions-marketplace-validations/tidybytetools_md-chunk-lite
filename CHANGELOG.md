@@ -2,6 +2,11 @@
 
 What changed in md-chunk-lite, newest first.
 
+## 1.1.1 - 2026-11-09
+
+- Point Homepage, Documentation, and the MCP Registry websiteUrl at the official product page on [tidybytetools.github.io](https://tidybytetools.github.io/tools/markdown-chunker/).
+- README: add a clear Links section (Website, Apify cloud version where it exists, Pro on Gumroad) and a short FAQ.
+
 ## 1.1.0 - 2026-11-09
 
 - Fix: if the JSONL file was saved under a hidden folder like `.github/`, the artifact upload could miss it. The upload now includes hidden folders.
