@@ -208,7 +208,7 @@ It runs the code in the same tag you pick, with only Python's standard library. 
 | `output` | `md-chunks.jsonl` | Where to save the chunks. |
 | `fail-on-split` | `false` | Fail when a section is too big for one chunk. |
 | `fail-if-no-files` | `true` | Fail when no files match. |
-| `artifact-name` | (empty) | If set, upload the JSONL as an artifact with this name. |
+| `artifact-name` | (empty) | If set, upload the JSONL as an artifact with this name. Hidden folders like `.github/` are included. |
 | `python-version` | (empty) | Python to set up. Empty uses the runner's Python (3.10 or newer). |
 
 ### Outputs

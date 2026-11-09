@@ -117,3 +117,4 @@ runs:
         name: ${{ inputs.artifact-name }}
         path: ${{ steps.chunk.outputs.output }}
         if-no-files-found: error
+        include-hidden-files: true
