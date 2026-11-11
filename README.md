@@ -22,6 +22,8 @@ Need PDF, Word or web page files turned into chunks (with page numbers for PDFs)
 
 Good for AI search (RAG), embeddings, and docs bots. Plain code, not AI, so the same file always gives the same chunks. Runs on your own computer. MIT license. Python 3.10 or newer, on Windows, Mac and Linux.
 
+Also searched as: ES: dividir Markdown en chunks para RAG / PT: dividir Markdown em chunks / DE: Markdown in Chunks teilen / FR: découper du Markdown / JA: Markdownチャンク分割、RAG
+
 ## Links
 
 - **[Website](https://tidybytetools.github.io/tools/markdown-chunker/)** — product page with prices and options
@@ -29,6 +31,10 @@ Good for AI search (RAG), embeddings, and docs bots. Plain code, not AI, so the 
 - **[Pro version on Gumroad](https://tidybyte.gumroad.com/l/frlkv)** — PDF/Word/HTML to chunks (doc2md Pro)
 
 <!-- mcp-name: io.github.tidybytetools/md-chunk-lite -->
+
+## Before and after
+
+Before: a Markdown file with headings, and maybe a code block or a table. After: chunks that split on headings first. Each chunk keeps its heading path and line numbers. A code block or table is not cut in the middle when it fits.
 
 ## Install
 
