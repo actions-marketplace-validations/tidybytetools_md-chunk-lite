@@ -9,15 +9,46 @@
 
 # md-chunk-lite
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/tidybytetools/md-chunk-lite/blob/main/LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
-[![MCP server](https://img.shields.io/badge/MCP-stdio-purple.svg)](#use-it-from-claude-desktop-or-cursor-mcp)
-[![MCP Registry](https://img.shields.io/badge/MCP_Registry-listed-green.svg)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.tidybytetools/md-chunk-lite)
-[![PyPI downloads](https://img.shields.io/pypi/dm/md-chunk-lite.svg)](https://pypistats.org/packages/md-chunk-lite)
 [![Tests](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/tests.yml/badge.svg)](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/tests.yml)
-[![Action test](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/action-test.yml/badge.svg)](https://github.com/tidybytetools/md-chunk-lite/actions/workflows/action-test.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/tidybytetools/md-chunk-lite/blob/main/LICENSE)
+[![Version](https://img.shields.io/github/v/release/tidybytetools/md-chunk-lite?label=version)](https://github.com/tidybytetools/md-chunk-lite/releases)
+[![Apify](https://apify.com/actor-badge?actor=tidybytetools/markdown-rag-chunker)](https://apify.com/tidybytetools/markdown-rag-chunker)
 
 Free tool that splits Markdown into chunks by heading. Every chunk knows its heading path and the line numbers it came from.
+
+## Example
+
+Input:
+
+````markdown
+# Garden Guide
+
+Welcome! This guide helps you start a small garden.
+
+## Tools
+
+You need a shovel, a rake and gloves.
+
+## Planting
+
+Plant tomatoes after the last frost. Give them sun.
+
+```python
+def water(plant):
+    return plant + " is wet"
+```
+````
+
+Output from an actual run (3 chunks, with heading path, line numbers, and text):
+
+```
+{"heading_path": ["Garden Guide"], "start_line": 1, "end_line": 3, "text": "# Garden Guide\n\nWelcome! This guide helps you start a small garden."}
+{"heading_path": ["Garden Guide", "Tools"], "start_line": 5, "end_line": 7, "text": "## Tools\n\nYou need a shovel, a rake and gloves."}
+{"heading_path": ["Garden Guide", "Planting"], "start_line": 9, "end_line": 16, "text": "## Planting\n\nPlant tomatoes after the last frost. Give them sun.\n\n```python\ndef water(plant):\n    return plant + \" is wet\"\n```"}
+```
+
+A code block or table is not cut in the middle when it fits.
+
 Need PDF, Word or web page files turned into chunks (with page numbers for PDFs), or whole folders? The paid doc2md does that: **[doc2md on Gumroad](https://tidybyte.gumroad.com/l/frlkv)**
 
 Good for AI search (RAG), embeddings, and docs bots. Plain code, not AI, so the same file always gives the same chunks. Runs on your own computer. MIT license. Python 3.10 or newer, on Windows, Mac and Linux.
@@ -31,10 +62,6 @@ Also searched as: ES: dividir Markdown en chunks para RAG / PT: dividir Markdown
 - **[Pro version on Gumroad](https://tidybyte.gumroad.com/l/frlkv)** — PDF/Word/HTML to chunks (doc2md Pro)
 
 <!-- mcp-name: io.github.tidybytetools/md-chunk-lite -->
-
-## Before and after
-
-Before: a Markdown file with headings, and maybe a code block or a table. After: chunks that split on headings first. Each chunk keeps its heading path and line numbers. A code block or table is not cut in the middle when it fits.
 
 ## Install
 
